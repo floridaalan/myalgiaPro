@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "myalgiapro",
+  "private_key_id": "2cc5fce52acc3d25750f14b99bc934550d057127",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDoLZePWBWdN923\nNrSwFcWqzK4rcqbrRyOWpSn7rNEWBB7TRE6pmKKpM4P9jX9vLJHF2EdESbwWMa1S\nz8nfQ8zgBXFNLSawi84rIWRO0VQe/S6UjFhPng40qlXFZlnlkzRhiSPUCD1nS0Lv\njalSNB/ljEsa55j7XmnEf6ttFw+3SzCFxTjZgPMECv3R6aLrXg+1/hDmhsPI2PmC\nc/q3mCrbFWZ+Tr/w4oUGH1otikM+Ptp7+goblhh6KrJuonDskOfWyc26sPvtaMdJ\nAtLjfQz+R3SLMwsCvg4Ce+OPMA/FAkGISV+a6GOLvbAHcTsmpJeKJkmEZC8ckVE0\nlfDatBZVAgMBAAECggEAYBeehqE6MNuSU+W8WrRoHwyfeTP2iaHjxNGO0q7vymDi\nMSYwOFkH2WeM1T/e4jBcFLoypLyvr6/XwFJnhpQVExKtlfd978utBITJcyWH31uC\nD9EWK72Ku5lT7mMyCaYnI8cSoQrX/wxTI7pJvc/885Bg9T2tPzwQIleEp53Hz1/x\nYChp+8wfUN3M9kRlKPkxwmDunWpLAA81jXU9FPMuN0hqrWG1L21X1Caexx3aP/U1\ndBiVIotvMx+SzuDhBKEFrLtzYy8P8eZIg34SbCnRM2bGZ21048iaZGFW2KZyDagr\n8NLOw0ZW8y3mpn1/bku03LIOP4ezR/ETm1rmG1ZE8QKBgQD2Rl7DH20EwuA342q2\nis9XHACdXcIoCamAuhGmiflKHhs46DTxLk1eP3/FFF1jO4a5+5gkbYBxhHT925TJ\nOkbdvz0XkcWa8nkzWmab3y+4iYwjn/rSUgT+e0h1l1GYW8xbvaTy9jeznmSf+x11\nsNzgUHl9KetDP6O7oqLgSx2FWwKBgQDxWLcd6Zaja3B8H/BWX5dqiIXhLuiLfbOg\n1PeUEpZaitrTMJShVUPglG1YCTzehWx1IWC3GgODtmkMqmzUiEBaYAYfY5n+GOPt\nY4sOo2OXTeJyzMEvRzprB/CKEzo3pV35yoDKNlQ/fFi0pULqYk7XDAEvZq+PfGQ0\n/rqJC8CyDwKBgDdAPFxMPZoW2lTPiY5gf/nMB3tGoJt453VAyVryk2IEdRkER3Rg\nbe0aE+E0G2t63FP3VP+/LVTKYbDeRXgLwgBXui4CfzGu+nAB9Qk9PiiJe042wv/S\ndNpe8Depdh3XYnamik4T3RVIEM0vekGAJ12P0GG7ONPCgEpFR4NIdtwHAoGAWmOw\niVpv2ZqmkUZg++hnTDX/djvcSkn02ZqJcwKXHyf8FraOI/JMLrNIVH15N5ne6etr\nTohGorDRnTXC9sJk37Qw9taV2Q23Z7QtY3kcFpHL6tT20V8q6OUbWIsk9axQivol\nzBYW7YQDsPxoGGJjRrUvSHJ79BBRc2unryYgsE8CgYATWGcKgwROQHSJQwwUE9lh\nxOgmNd5DQ7LztUpqDdQ2qwM+zCilyKfcqFo6GIMfO5KaTPIV98G4D3U0V38Fctah\n4qgdi+PyvrHwYqUXAk3WLSW2OunjzBHq3UwFg51bMgVwZnFTUZXjqd3Vn+u/dYdo\nIVFtGpa0nV57e9AUeQKluw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@myalgiapro.iam.gserviceaccount.com",
+  "client_id": "109076913092347320711",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40myalgiapro.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

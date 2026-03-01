@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+streamlit
+numpy
+pandas
+scipy
+scikit-learn
+joblib
+firebase-admin
+requests
