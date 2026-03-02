@@ -1,47 +1,26 @@
-from fastapi import FastAPI
+# api.py
+import pickle
 import numpy as np
-import joblib
-from datetime import datetime
 
-app = FastAPI()
+mode_model = pickle.load(open("models/mode_model.pkl", "rb"))
 
-# ---------- LOAD MODELS ----------
-freq_model = joblib.load("models/frequency_model.pkl")
-mode_model = joblib.load("models/mode_model.pkl")
-intensity_model = joblib.load("models/intensity_model.pkl")
-le = joblib.load("models/mode_label_encoder.pkl")
+def predict_tens_params(rms, mav, mnf, feedback=None):
+    X = np.array([[rms, mav, mnf]])
+    
+    mode = mode_model.predict(X)[0]
 
-@app.post("/emg")
-def receive_emg(data: dict):
-    """
-    Expected JSON from Arduino/Python:
-    {
-      "patient_id": "12",
-      "rms": 345.9,
-      "mav": 345.9,
-      "mnf": 5.37
+    # Simple rule-based tuning (example)
+    frequency = 80 if mnf < 6 else 100
+    intensity = min(30, rms / 15)
+    pulse_width = 200
+
+    # Adaptive adjustment using feedback
+    if feedback:
+        intensity += (feedback - 3) * 2
+
+    return {
+        "frequency": round(frequency, 2),
+        "intensity": round(intensity, 2),
+        "pulse_width": pulse_width,
+        "mode": mode
     }
-    """
-
-    rms = data["rms"]
-    mav = data["mav"]
-    mnf = data["mnf"]
-
-    # Dummy pain score for now (can be replaced later)
-    pain_before = 3
-
-    X = np.array([[rms, mav, mnf, pain_before]])
-
-    frequency = int(freq_model.predict(X)[0])
-    mode = le.inverse_transform(mode_model.predict(X))[0]
-    intensity = int(intensity_model.predict(X)[0])
-
-    response = {
-        "frequency_hz": frequency,
-        "intensity_mA": intensity,
-        "pulse_width_us": 200,
-        "mode": mode,
-        "timestamp": datetime.utcnow().isoformat()
-    }
-
-    return response
