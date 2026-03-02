@@ -1,8 +1,6 @@
-fastapi
-uvicorn
-streamlit
+flask
+gunicorn
 numpy
-pandas
 scipy
 scikit-learn
 joblib
