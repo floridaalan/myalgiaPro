@@ -1,38 +1,25 @@
-import streamlit as st
-import firebase_admin
-from firebase_admin import credentials, firestore
-import time
+# app.py
+from flask import Flask, request, jsonify
+from api import predict_tens_params
 
-# ---------- FIREBASE ----------
-cred = credentials.Certificate("firebase_key.json")
-if not firebase_admin._apps:
-    firebase_admin.initialize_app(cred)
-db = firestore.client()
+app = Flask(__name__)
 
-st.set_page_config(layout="wide")
-st.title("Live AI-Based TENS Recommendation Dashboard")
+@app.route("/emg", methods=["POST"])
+def predict():
+    data = request.get_json(force=True)
 
-placeholder = st.empty()
+    required = ["patient_id", "rms", "mav", "mnf"]
+    if not all(k in data for k in required):
+        return jsonify({"error": "Invalid input"}), 400
 
-while True:
-    docs = db.collection("sessions").order_by(
-        "timestamp", direction=firestore.Query.DESCENDING
-    ).limit(1).stream()
+    result = predict_tens_params(
+        data["rms"],
+        data["mav"],
+        data["mnf"],
+        data.get("feedback")
+    )
 
-    for doc in docs:
-        data = doc.to_dict()
+    return jsonify(result)
 
-        with placeholder.container():
-            st.subheader("📡 Latest Session")
-
-            col1, col2, col3 = st.columns(3)
-            col1.metric("Frequency (Hz)", data["frequency"])
-            col2.metric("Mode", data["mode"])
-            col3.metric("Avg Intensity", round(sum(data["intensity"]) / 4, 2))
-
-            st.write("**RMS:**", round(data["rms"], 3))
-            st.write("**MAV:**", round(data["mav"], 3))
-            st.write("**MNF:**", round(data["mnf"], 2))
-            st.write("**Channel Intensities:**", data["intensity"])
-
-    time.sleep(3)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
