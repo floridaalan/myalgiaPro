@@ -1,12 +1,12 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 import numpy as np
 import joblib
-import scipy.signal as signal
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
 
-# ---------- FIREBASE INIT ----------
+# ---------- FIREBASE ----------
 cred = credentials.Certificate("firebase_key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
@@ -19,49 +19,43 @@ le = joblib.load("models/mode_label_encoder.pkl")
 
 app = FastAPI()
 
-# ---------- EMG BUFFER ----------
-emg_buffer = []
-FS = 1000          # Sampling frequency
-WINDOW = 1000      # Samples per window
+# ---------- INPUT SCHEMA ----------
+class EMGFeatures(BaseModel):
+    patient_id: str
+    rms: float
+    mav: float
+    mnf: float
+    pain_before: int | None = 7
 
+# ---------- ENDPOINT ----------
 @app.post("/emg")
-def receive_emg(data: dict):
-    global emg_buffer
+def receive_emg(data: EMGFeatures):
 
-    emg_buffer.append(data["emg"])
+    X = np.array([[data.rms, data.mav, data.mnf, data.pain_before]])
 
-    if len(emg_buffer) >= WINDOW:
-        emg = np.array(emg_buffer)
-        emg_buffer.clear()
+    frequency = int(freq_model.predict(X)[0])
+    mode = le.inverse_transform(mode_model.predict(X))[0]
+    intensity = int(intensity_model.predict(X)[0])
 
-        # ---- FEATURE EXTRACTION ----
-        rms = np.sqrt(np.mean(emg**2))
-        mav = np.mean(np.abs(emg))
-        freqs, psd = signal.welch(emg, fs=FS)
-        mnf = np.sum(freqs * psd) / np.sum(psd)
+    pulse_width = 200  # fixed / rule-based for now
 
-        pain_before = data.get("pain_before", 7)
+    record = {
+        "patient_id": data.patient_id,
+        "rms": data.rms,
+        "mav": data.mav,
+        "mnf": data.mnf,
+        "frequency_hz": frequency,
+        "intensity_mA": intensity,
+        "pulse_width_us": pulse_width,
+        "mode": mode,
+        "timestamp": datetime.utcnow()
+    }
 
-        X = np.array([[rms, mav, mnf, pain_before]])
+    db.collection("sessions").add(record)
 
-        # ---- ML INFERENCE ----
-        frequency = int(freq_model.predict(X)[0])
-        mode = le.inverse_transform(mode_model.predict(X))[0]
-        intensity = intensity_model.predict(X)[0].tolist()
-
-        # ---- STORE TO FIREBASE ----
-        record = {
-            "rms": rms,
-            "mav": mav,
-            "mnf": mnf,
-            "frequency": frequency,
-            "mode": mode,
-            "intensity": intensity,
-            "timestamp": datetime.utcnow()
-        }
-
-        db.collection("sessions").add(record)
-
-        return record
-
-    return {"status": "collecting"}
+    return {
+        "frequency_hz": frequency,
+        "intensity_mA": intensity,
+        "pulse_width_us": pulse_width,
+        "mode": mode
+    }
