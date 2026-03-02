@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from api import predict_tens_params
+import traceback
 
 app = Flask(__name__)
 
@@ -9,17 +10,20 @@ def home():
 
 @app.route("/emg", methods=["POST"])
 def emg():
-    data = request.get_json(force=True)
+    try:
+        data = request.get_json(force=True)
 
-    required = ["patient_id", "rms", "mav", "mnf"]
-    if not all(k in data for k in required):
-        return jsonify({"error": "Invalid input"}), 400
+        result = predict_tens_params(
+            data["rms"],
+            data["mav"],
+            data["mnf"],
+            data.get("feedback")
+        )
 
-    result = predict_tens_params(
-        data["rms"],
-        data["mav"],
-        data["mnf"],
-        data.get("feedback")
-    )
+        return jsonify(result)
 
-    return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "trace": traceback.format_exc()
+        }), 500
