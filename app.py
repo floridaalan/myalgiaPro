@@ -1,11 +1,14 @@
-# app.py
 from flask import Flask, request, jsonify
 from api import predict_tens_params
 
 app = Flask(__name__)
 
+@app.route("/")
+def home():
+    return "EMG–TENS API running successfully"
+
 @app.route("/emg", methods=["POST"])
-def predict():
+def emg():
     data = request.get_json(force=True)
 
     required = ["patient_id", "rms", "mav", "mnf"]
@@ -20,6 +23,3 @@ def predict():
     )
 
     return jsonify(result)
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
